@@ -54,7 +54,7 @@ The project structure is organized as follows:
 - **gui/**                # GUI related code and assets
 - **docs/**               # Documentation and project notes
 - **README.md**           # Project overview and setup guide
-- **enviroment.yml**    # Python dependencies
+- **environment.yml**    # Python dependencies
 
 ## Getting Started
 
@@ -121,7 +121,7 @@ python initialize.py
 - **gui/** # GUI 相关代码和资源
 - **docs/** # 项目文档和笔记
 - **README.md** # 项目概述与设置指南
-- **enviroment.yml** # Python 依赖库
+- **environment.yml** # Python 依赖库
 
 ## 快速开始
 
