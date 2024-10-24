@@ -54,7 +54,7 @@ The project structure is organized as follows:
 - **gui/**                # GUI related code and assets
 - **docs/**               # Documentation and project notes
 - **README.md**           # Project overview and setup guide
-- **requirements.txt**    # Python dependencies
+- **enviroment.yml**    # Python dependencies
 
 ## Getting Started
 
@@ -63,19 +63,9 @@ The project structure is organized as follows:
    git clone https://github.com/your-repo/automatic-text-summarization.git
    ```
 
-2. **Install the required packages**:
+2. **Initialize the project**:
    ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Download the datasets**:
-   ```bash
-   python scripts/download_datasets.py
-   ```
-
-4. **Run the application**:
-   ```bash
-   python src/main.py
+   python initialize.py
    ```
 
 # 自动文本摘要生成 (EE6405 - Group D24)
@@ -131,7 +121,7 @@ The project structure is organized as follows:
 - **gui/** # GUI 相关代码和资源
 - **docs/** # 项目文档和笔记
 - **README.md** # 项目概述与设置指南
-- **requirements.txt** # Python 依赖库
+- **enviroment.yml** # Python 依赖库
 
 ## 快速开始
 
@@ -140,18 +130,7 @@ The project structure is organized as follows:
 git clone https://github.com/your-repo/automatic-text-summarization.git
 ```
 
-### 安装依赖：
+### 初始化项目：
 ```bash
-pip install -r requirements.txt
+python initialize.py
 ```
-
-### 下载数据：
-```bash
-python scripts/download_datasets.py
-```
-
-### 运行项目：
-```bash
-python src/main.py
-```
-   
