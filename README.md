@@ -12,8 +12,8 @@ Additionally, we aim to build a **Graphical User Interface (GUI)** that allows u
    - Clean and preprocess the text data.
    - Sentence tokenization and removal of irrelevant information.
    - Datasets:
-     - [CNN/Daily Mail Dataset](https://www.kaggle.com/datasets) for news articles.
-     - Research papers and their abstracts (e.g., from arXiv or other open repositories).
+     - [CNN/Daily Mail Dataset](https://huggingface.co/datasets/abisee/cnn_dailymail) for news articles.
+     - [ArXiv](https://huggingface.co/datasets/ccdv/arxiv-summarization) for research papers.
      - A third dataset (yet to be determined) involving article-summary pairs.
 
 2. **Traditional Methods for Extractive Summarization**
@@ -81,8 +81,8 @@ python initialize.py
 - 清理和预处理文本数据。
 - 进行分句处理，并去除无关信息。
 - **数据集：**
-  - CNN/Daily Mail 数据集 适用于新闻文章。
-  - 学术论文及其摘要（例如来自 arXiv 或其他公开仓库）。
+  - [CNN/Daily Mail](https://huggingface.co/datasets/abisee/cnn_dailymail) 数据集 适用于新闻文章。
+  - [ArXiv](https://huggingface.co/datasets/ccdv/arxiv-summarization)数据集 适用于研究论文。
   - 第三类数据集（尚未确定），可能包含文章-摘要对。
 
 ### 提取式摘要生成的传统方法
