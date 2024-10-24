@@ -58,15 +58,15 @@ The project structure is organized as follows:
 
 ## Getting Started
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/your-repo/automatic-text-summarization.git
-   ```
+### Clone the repository:
+```bash
+git clone https://github.com/your-repo/automatic-text-summarization.git
+```
 
-2. **Initialize the project**:
-   ```bash
-   python initialize.py
-   ```
+### Initialize the project:
+```bash
+python initialize.py
+```
 
 # 自动文本摘要生成 (EE6405 - Group D24)
 
