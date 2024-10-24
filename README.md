@@ -48,7 +48,8 @@ The project structure is organized as follows:
 - **data/**               # Directory for storing datasets (datasets are not uploaded but can be downloaded via scripts)
 - **src/**                # Source code for summarization methods
 - **models/**             # Directory for storing trained models
-- **scripts/**          # Automation scripts (e.g., data download, model training)
+- **setup/**              # Directory for setup
+- **scripts/**            # Automation scripts (e.g., data download, model training)
 - **results/**            # Output results such as generated summaries
 - **gui/**                # GUI related code and assets
 - **docs/**               # Documentation and project notes
@@ -124,6 +125,7 @@ The project structure is organized as follows:
 - **data/** # 用于存储数据集的目录（数据集不会上传，但可通过脚本下载）
 - **src/** # 摘要生成方法的源代码
 - **models/** # 用于存储训练好的模型的目录
+- **setup/** # 用于setup的脚本
 - **scripts/** # 自动化脚本（如数据下载、模型训练）
 - **results/** # 输出结果（例如生成的摘要）
 - **gui/** # GUI 相关代码和资源
