@@ -60,7 +60,7 @@ The project structure is organized as follows:
 
 ### Clone the repository:
 ```bash
-git clone https://github.com/your-repo/automatic-text-summarization.git
+git clone https://github.com/AlvisWSY/EE6405_D24.git
 ```
 
 ### Initialize the project:
@@ -127,7 +127,7 @@ python initialize.py
 
 ### 克隆项目：
 ```bash
-git clone https://github.com/your-repo/automatic-text-summarization.git
+git clone https://github.com/AlvisWSY/EE6405_D24.git
 ```
 
 ### 初始化项目：
