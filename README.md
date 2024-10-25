@@ -67,6 +67,7 @@ git clone https://github.com/AlvisWSY/EE6405_D24.git
 ```bash
 python initialize.py
 ```
+This script initializes the project by setting up the conda environment, creating the necessary directory structures, and downloading datasets to the `data/` directory.
 
 # 自动文本摘要生成 (EE6405 - Group D24)
 
@@ -134,3 +135,4 @@ git clone https://github.com/AlvisWSY/EE6405_D24.git
 ```bash
 python initialize.py
 ```
+这个脚本会初始化项目目录，创建项目所用环境，并下载数据集至`data/` 目录.
