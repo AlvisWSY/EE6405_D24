@@ -19,6 +19,7 @@ Additionally, we aim to build a **Graphical User Interface (GUI)** that allows u
 2. **Traditional Methods for Extractive Summarization**
    - **TF-IDF**: Implement term frequency-inverse document frequency to extract key sentences.
    - **TextRank**: Apply graph-based TextRank for extractive summarization.
+   - **LexRank**: Apply graph-based LexRank for extractive summarization.
 
 3. **Transformer Models for Abstract Summarization**
    - Implement abstractive summarization using modern transformer models:
@@ -30,6 +31,7 @@ Additionally, we aim to build a **Graphical User Interface (GUI)** that allows u
    - Metrics for evaluation:
      - **BLEU**: Evaluate overlap between generated summaries and reference summaries.
      - **ROUGE**: Measure recall-oriented evaluation of generated summaries.
+     - **Metor**: Evaluate.
 
 5. **GUI Development**
    - Develop a user-friendly GUI to allow users to:
