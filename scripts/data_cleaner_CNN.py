@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 # Set the base directory relative to the script's location
 base_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(base_dir, '../data/cnn_dailymail/')
-processed_data_dir = os.path.join(base_dir, '../data/cnn_dailymail_Processed/')
+processed_data_dir = os.path.join(base_dir, '../data/Processed/cnn_dailymail/')
 sub_dirs = ['train', 'test', 'validation']
 
 # Make sure the processed directory exists
