@@ -28,9 +28,6 @@ for sub_dir in sub_dirs:
         return text
 
     def process_examples(example):
-        # Remove samples where the length of abstract is greater than 9000 characters
-        if len(example['abstract']) > 3000:
-            return None
         # Clean HTML tags and illegal characters in all string columns
         example['abstract'] = clean_html_and_illegal_chars(example['abstract'])
         example['article'] = clean_html_and_illegal_chars(example['article'])
@@ -38,8 +35,10 @@ for sub_dir in sub_dirs:
         example['text'] = example.pop('article')
         return example
 
-    # Filter out and process dataset rows
-    filtered_dataset = dataset.filter(lambda x: len(x['abstract']) <= 9000)
+    # First, filter out rows where the 'abstract' length is greater than 3000 characters
+    filtered_dataset = dataset.filter(lambda x: len(x['abstract']) <= 3000)
+
+    # Then, map the processing function without returning None
     processed_dataset = filtered_dataset.map(process_examples, remove_columns=['article'])
     
     # Save the processed dataset
