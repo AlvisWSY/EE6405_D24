@@ -23,31 +23,49 @@ for sub_dir in sub_dirs:
     def clean_html_and_illegal_chars(text):
         # Remove HTML tags
         text = BeautifulSoup(text, 'html.parser').get_text()
-        # Remove illegal characters
-        text = re.sub(r'[^\x00-\x7F]+', ' ', text)
-
-        # Remove HTML tags
+        # Remove HTML tags (if any)
         text = re.sub(r'<.*?>', ' ', text)
         
-        # Remove LaTeX placeholders, commands, and math
-        text = re.sub(r'@x\w+|\\[a-zA-Z]+|\$.*?\$|\\\[.*?\\\]|\\begin{.*?}\\.*?\\end{.*?}', ' ', text, flags=re.DOTALL)
-        text = re.sub(r'\\[,{}\[\]]|\^\s*_\s*\}|\^\s*_\s*\^\s*_|fig\. \(\s*\)', ' ', text, flags=re.IGNORECASE)
+        # Remove LaTeX placeholders and commands
+        text = re.sub(r'@xcite|@x\w+', ' ', text)  # Remove LaTeX-like placeholders
+        text = re.sub(r'\\[a-zA-Z]+', ' ', text)  # Remove LaTeX commands like \text
+        text = re.sub(r'\$.*?\$', ' ', text)  # Remove inline math ($...$)
+        text = re.sub(r'\\\[.*?\\\]', ' ', text)  # Remove block math (\[...\])
+        text = re.sub(r'\\begin{.*?}\\.*?\\end{.*?}', ' ', text, flags=re.DOTALL)  # Remove LaTeX environments
         
-        # Remove unresolved references and specific patterns
-        text = re.sub(r'\b[a-zA-Z_]+\s*et\s*al\.?,?\b|\bclass\. grav\.?\s*,?', ' ', text, flags=re.IGNORECASE)
+        # Remove LaTeX-like sequences
+        text = re.sub(r'\\,|\\\]|\\\{', ' ', text)  # Remove escaped commas, brackets, and curly braces
+        text = re.sub(r'\^ _ \}', ' ', text)  # Remove specific LaTeX patterns
+        text = re.sub(r'\^ _ \^ _', ' ', text)  # Remove patterns like ^ _ ^ _
+        text = re.sub(r'\^ _ \}', ' ', text)  # Remove patterns like ^ _ }
 
-        # Remove content inside brackets and braces
-        text = re.sub(r'\[.*?\]|\{.*?\}', ' ', text)
-
-        # Remove repeated punctuation and unnecessary spaces
-        text = re.sub(r'([.,!?])\1+|\s+([.,!?])|[.,!?]{2,}', r'\1', text)
+        # Remove fig. ( ) and similar patterns
+        text = re.sub(r'fig\. \(\s*\)', ' ', text, flags=re.IGNORECASE)  # Remove fig. ( ) and variants
         
-        # Remove standalone numbers and special characters
-        text = re.sub(r'\b\d+\b|[^\w\s.,]', ' ', text)
-        text = re.sub(r'\s+', ' ', text).strip()
+        # Remove unresolved references like "aasi _ et al."
+        text = re.sub(r'[a-zA-Z_]+\s*et\s*al\.?\s*,?', ' ', text, flags=re.IGNORECASE)  # Remove "et al." references
+        text = re.sub(r'class\. grav\.\s*\*?\s*\*?\s*,?', ' ', text, flags=re.IGNORECASE)  # Remove "class. grav."
+
+        # Remove brackets and their contents
+        text = re.sub(r'\[[^\]]*\]', ' ', text)  # Remove contents in square brackets
+        text = re.sub(r'\{[^\}]*\}', ' ', text)  # Remove contents in curly braces
+
+        # Remove sequences of repeated punctuation
+        text = re.sub(r'([.,!?])\1+', r'\1', text)  # Replace repeated punctuation like "..." with "."
+        text = re.sub(r'\s+([.,!?])', r'\1', text)  # Remove spaces before punctuation
+        text = re.sub(r'[.,!?]{2,}', ' ', text)  # Remove repeated punctuation entirely
+        
+        # Remove numbers, standalone symbols, and extra spaces
+        text = re.sub(r'\b\d+\b', ' ', text)  # Remove isolated numbers
+        text = re.sub(r'[^\w\s.,]', ' ', text)  # Remove standalone special characters
+        text = re.sub(r'\s+', ' ', text).strip()  # Normalize spaces
+
+        # Remove _ and ^ characters
+        text = re.sub(r'[\^_]', ' ', text)  # Remove _ and ^ characters
 
         return text
-
+    
+    
     def process_examples(example):
         # Clean HTML tags and illegal characters in all string columns
         example['abstract'] = clean_html_and_illegal_chars(example['abstract'])
