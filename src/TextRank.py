@@ -29,7 +29,7 @@ def preprocess_text(text):
         preprocessed_sentences.append(" ".join(words))
     return sentences, preprocessed_sentences
 
-def textrank_summary(text, num_sentences=3):
+def textrank_summary(text, num_sentences=5):
     """
     使用 TextRank 生成摘要。
     :param text: 输入文本
@@ -70,13 +70,14 @@ def process_sample(sample):
     """
     text = sample["text"]
     abstract = sample["abstract"]
-    summary = textrank_summary(text, num_sentences=3)
+    summary = textrank_summary(text, num_sentences=5)
     return {"text": text, "abstract": abstract, "generated_summary": summary}
 
+# ArXiv 数据集
 # 获取当前脚本的实际路径
 script_dir = os.path.dirname(os.path.abspath(__file__))
 dataset_path = os.path.join(script_dir, "../data/Processed/ArXiv/")  # 数据集的相对路径
-output_path = os.path.join(script_dir, "../data/TextRank/ArXiv/")  # 输出路径
+output_path = os.path.join(script_dir, "../output/TextRank/ArXiv/")  # 输出路径
 
 # 加载 Hugging Face 数据集
 dataset = load_from_disk(dataset_path)
@@ -98,4 +99,32 @@ processed_dataset.save_to_disk(output_path)
 # 打印示例
 print("数据集已保存到:", output_path)
 print("示例原文:", processed_dataset[0]["abstract"])
-print("示例摘要:", processed_dataset[0]["generated_summary"])
+print("示例摘要:", processed_dataset[0]["output"])
+
+
+# CNN数据集
+# 获取当前脚本的实际路径
+dataset_path = os.path.join(script_dir, "../data/Processed/cnn_dailymail/")  # 数据集的相对路径
+output_path = os.path.join(script_dir, "../output/TextRank/cnn_dailymail/")  # 输出路径
+
+# 加载 Hugging Face 数据集
+dataset = load_from_disk(dataset_path)
+test_dataset = dataset["test"]
+
+# 并行处理数据集
+with Pool(processes=4) as pool:  # 使用4个进程并行处理
+    processed_samples = pool.map(process_sample, test_dataset)
+
+# 将结果保存为新的 Hugging Face 数据集
+processed_dataset = Dataset.from_dict({
+    "abstract": [sample["abstract"] for sample in processed_samples],
+    "output": [sample["generated_summary"] for sample in processed_samples]
+})
+
+# 保存为 Arrow 格式
+processed_dataset.save_to_disk(output_path)
+
+# 打印示例
+print("数据集已保存到:", output_path)
+print("示例原文:", processed_dataset[0]["abstract"])
+print("示例摘要:", processed_dataset[0]["output"])
