@@ -26,14 +26,45 @@ def preprocess_text(text):
 
 # 方法 1: 关键词提取
 def keyword_summary(text, num_sentences=5):
+    # 1. 预处理文本
     original_sentences, preprocessed_sentences = preprocess_text(text)
     if not preprocessed_sentences:
         return "No content to summarize."
+
+    # 2. 计算 TF-IDF 矩阵
     vectorizer = TfidfVectorizer()
     tfidf_matrix = vectorizer.fit_transform(preprocessed_sentences)
-    scores = tfidf_matrix.sum(axis=1).A.flatten()  # 稀疏矩阵操作
-    ranked_sentences = sorted(((scores[i], original_sentences[i]) for i in range(len(original_sentences))), reverse=True)
-    return " ".join(s for _, s in ranked_sentences[:num_sentences])
+
+    # 3. 计算每个句子的权重分数（归一化长度）
+    scores = [
+        (tfidf_matrix[i].sum() / max(1, len(original_sentences[i].split())), original_sentences[i])
+        for i in range(len(original_sentences))
+    ]
+
+    # 4. 排序句子分数
+    ranked_sentences = sorted(scores, reverse=True)
+
+    # 5. 去除重复句子
+    selected_sentences = []
+    for _, sentence in ranked_sentences:
+        if len(selected_sentences) >= num_sentences:
+            break
+        if not is_similar(sentence, selected_sentences, threshold=0.5):
+            selected_sentences.append(sentence)
+
+    # 6. 返回摘要
+    return " ".join(selected_sentences)
+
+def is_similar(sentence, selected_sentences, threshold=0.5):
+    """
+    检查句子是否与已选句子重复（使用 Jaccard 相似度）。
+    """
+    sentence_set = set(sentence.split())
+    for selected in selected_sentences:
+        selected_set = set(selected.split())
+        if len(sentence_set & selected_set) / len(sentence_set | selected_set) > threshold:
+            return True
+    return False
 
 # 方法 2: HITS
 def hits_summary(text, num_sentences=5):
