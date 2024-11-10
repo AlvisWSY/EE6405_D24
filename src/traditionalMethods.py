@@ -121,7 +121,7 @@ def process_datasets(path, outpath):
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # 配置相对路径
-path = os.path.join(current_dir, "../data/Processed")  # 输入路径
+path = os.path.join(current_dir, "../data/processed")  # 输入路径
 outpath = os.path.join(current_dir, "../output")  # 输出路径
 
 # 运行

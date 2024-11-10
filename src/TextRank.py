@@ -76,7 +76,7 @@ def process_sample(sample):
 # ArXiv 数据集
 # 获取当前脚本的实际路径
 script_dir = os.path.dirname(os.path.abspath(__file__))
-dataset_path = os.path.join(script_dir, "../data/Processed/ArXiv/")  # 数据集的相对路径
+dataset_path = os.path.join(script_dir, "../data/processed/ArXiv/")  # 数据集的相对路径
 output_path = os.path.join(script_dir, "../output/TextRank/ArXiv/")  # 输出路径
 
 # 加载 Hugging Face 数据集
@@ -104,7 +104,7 @@ print("示例摘要:", processed_dataset[0]["output"])
 
 # CNN数据集
 # 获取当前脚本的实际路径
-dataset_path = os.path.join(script_dir, "../data/Processed/cnn_dailymail/")  # 数据集的相对路径
+dataset_path = os.path.join(script_dir, "../data/processed/cnn_dailymail/")  # 数据集的相对路径
 output_path = os.path.join(script_dir, "../output/TextRank/cnn_dailymail/")  # 输出路径
 
 # 加载 Hugging Face 数据集
