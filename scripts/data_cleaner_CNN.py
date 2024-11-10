@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 # Set the base directory relative to the script's location
 base_dir = os.path.dirname(os.path.abspath(__file__))
-data_dir = os.path.join(base_dir, '../data/cnn_dailymail/')
+data_dir = os.path.join(base_dir, '../data/origin/cnn_dailymail/')
 processed_data_dir = os.path.join(base_dir, '../data/Processed/cnn_dailymail/')
 sub_dirs = ['train', 'test', 'validation']
 
@@ -29,11 +29,19 @@ for sub_dir in sub_dirs:
 
     def remove_location_and_author(text):
         # Remove location/author patterns at the start of the text, e.g., "LONDON, England (Reuters) -- "
-        pattern = r'^[A-Z\s,]+\([A-Za-z]+\)\s*--\s*'
-        text = re.sub(pattern, '', text).strip()
+        pattern_location = r'^[A-Z\s,]+\([A-Za-z]+\)\s*--\s*'
+        text = re.sub(pattern_location, '', text).strip()
+
+        # Remove patterns like "(CNN)" or "(Reuters)"
+        pattern_source = r'\([A-Za-z\s]+\)'
+        text = re.sub(pattern_source, '', text).strip()
+
         # Remove patterns like "By . James Chapman for the Daily Mail ."
         pattern_byline = r'^By\s\.\s.*?\.'
         text = re.sub(pattern_byline, '', text).strip()
+
+        # Remove newlines and replace with spaces
+        text = re.sub(r'\n+', ' ', text).strip()
         return text
 
     def process_examples(example):
