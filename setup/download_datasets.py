@@ -31,7 +31,7 @@ def download_from_hf(dataset_name, subset, destination_folder):
 if __name__ == "__main__":
     # 获取当前脚本的绝对路径，确保文件下载到项目根目录的 data 文件夹中
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    destination_dir = os.path.join(project_root, 'data')
+    destination_dir = os.path.join(project_root, 'data\origin')
 
     # 数据集信息字典
     datasets = {
