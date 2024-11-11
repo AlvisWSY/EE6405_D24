@@ -29,8 +29,8 @@ print(f"Test results output directory: {output_dir}")
 print(f"Cache directory: {cache_dir}")
 
 # **指定可用的 GPU**
-# 您可以使用第 1、2、3 号 GPU
-os.environ["CUDA_VISIBLE_DEVICES"] = "2,3"
+# 如果您可以使用 GPU 0
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 # Step 2: 加载数据
 def load_and_print_dataset(path, split_name):
@@ -48,6 +48,17 @@ cnn_train = load_and_print_dataset(os.path.join(data_dir, "cnn_dailymail/train")
 cnn_validation = load_and_print_dataset(os.path.join(data_dir, "cnn_dailymail/validation"), "CNN validation")
 cnn_test = load_and_print_dataset(os.path.join(data_dir, "cnn_dailymail/test"), "CNN test")
 
+# **限制数据集大小**
+small_size = 100  # 您可以根据需要调整这个数字
+
+arxiv_train = arxiv_train.select(range(min(small_size, len(arxiv_train))))
+arxiv_validation = arxiv_validation.select(range(min(small_size, len(arxiv_validation))))
+arxiv_test = arxiv_test.select(range(min(small_size, len(arxiv_test))))
+
+cnn_train = cnn_train.select(range(min(small_size, len(cnn_train))))
+cnn_validation = cnn_validation.select(range(min(small_size, len(cnn_validation))))
+cnn_test = cnn_test.select(range(min(small_size, len(cnn_test))))
+
 # 合并训练集和验证集
 train_dataset = concatenate_datasets([arxiv_train, cnn_train])
 validation_dataset = concatenate_datasets([arxiv_validation, cnn_validation])
@@ -55,7 +66,7 @@ print(f"Combined train dataset size: {len(train_dataset)} samples")
 print(f"Combined validation dataset size: {len(validation_dataset)} samples")
 
 # Step 3: 加载预训练模型和 tokenizer
-model_name = "t5-base"
+model_name = "t5-small"  # 使用较小的模型以加快测试速度
 tokenizer = T5Tokenizer.from_pretrained(model_name)
 model = T5ForConditionalGeneration.from_pretrained(model_name)
 
@@ -97,8 +108,8 @@ def preprocess_dataset(dataset, num_proc, batch_size):
     )
 
 # 调整线程数和批量大小
-num_proc = 16  # 根据系统允许的最大线程数进行调整
-batch_size = 10000  # 根据内存情况适当调整
+num_proc = 1  # 减少线程数
+batch_size = 16  # 减少批量大小
 
 train_dataset = preprocess_dataset(train_dataset, num_proc=num_proc, batch_size=batch_size)
 validation_dataset = preprocess_dataset(validation_dataset, num_proc=num_proc, batch_size=batch_size)
@@ -109,29 +120,20 @@ training_args = Seq2SeqTrainingArguments(
     evaluation_strategy="epoch",
     save_strategy="epoch",
     learning_rate=5e-5,
-    per_device_train_batch_size=16,  # 增大批量大小以充分利用 GPU
-    per_device_eval_batch_size=16,
-    num_train_epochs=2,
+    per_device_train_batch_size=4,  # 根据显存情况调整
+    per_device_eval_batch_size=4,
+    num_train_epochs=1,  # 减少训练轮数
     weight_decay=0.01,
     save_total_limit=2,
     logging_dir="./logs",
-    logging_steps=500,
+    logging_steps=10,
     predict_with_generate=True,
     load_best_model_at_end=True,
-    fp16=True,  # 启用混合精度训练
-    dataloader_num_workers=4,  # 根据允许的线程数进行调整
-    # **启用分布式训练**
-    # 设置 fp16_backend 为 "amp"
-    fp16_backend="amp",
-    # 如果需要，可以启用 gradient_checkpointing 以节省显存
-    # gradient_checkpointing=True,
+    fp16=False,  # 禁用混合精度训练
 )
 
 # Step 6: 定义数据收集器
 data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
-
-# **确保模型可以使用多 GPU 进行训练**
-# Trainer 会自动检测并使用多个 GPU，无需额外设置
 
 # Step 7: 微调模型
 trainer = Trainer(
@@ -171,7 +173,7 @@ def generate_predictions(test_dataset, dataset_name):
         attention_mask = torch.nn.utils.rnn.pad_sequence(attention_mask, batch_first=True, padding_value=0)
         return {"input_ids": input_ids, "attention_mask": attention_mask}
 
-    dataloader = DataLoader(processed_test, batch_size=batch_size, collate_fn=collate_fn, num_workers=4)
+    dataloader = DataLoader(processed_test, batch_size=batch_size, collate_fn=collate_fn, num_workers=0)
 
     predictions = []
 
@@ -190,7 +192,7 @@ def generate_predictions(test_dataset, dataset_name):
         "output": predictions,
     })
 
-    save_path = os.path.join(output_dir, dataset_name)
+    save_path = os.path.join(output_dir, 'test',dataset_name)
     os.makedirs(save_path, exist_ok=True)
     results.save_to_disk(save_path)
     print(f"Test results saved to {save_path}")
