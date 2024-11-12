@@ -1,5 +1,7 @@
-/data
+/data/origin
+/data/processed
 .vscode/
 /output
 /logs/
-/models
+/models/t5_finetuned/
+/models/test/
