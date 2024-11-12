@@ -22,7 +22,7 @@ Additionally, we built a **Graphical User Interface (GUI)** that allows users to
    - **TextRank**: Apply graph-based TextRank for extractive summarization.
 
 3. **Transformer Models for Abstract Summarization**
-   - **T5 (Text-to-Text Transfer Transformer)**: Use for generating abstract summaries.
+   - **T5 (Text-to-Text Transfer Transformer)**: Finetune pre-trained T5-base model for atrical summarization.
 
 4. **Evaluation and Comparison**
    - Compare both traditional and transformer-based summarization methods.
@@ -46,13 +46,13 @@ Additionally, we built a **Graphical User Interface (GUI)** that allows users to
 The project structure is organized as follows:
 
 - **data/**               # Directory for storing datasets (datasets are not uploaded but can be downloaded via scripts)
-- **src/**                # Source code for summarization methods
-- **models/**             # Directory for storing trained models
-- **setup/**              # Directory for setup
-- **scripts/**            # Automation scripts (e.g., data download, model training)
-- **results/**            # Output results such as generated summaries
-- **gui/**                # GUI related code and assets
 - **docs/**               # Documentation and project notes
+- **gui/**                # GUI related code and assets
+- **models/**             # Directory for storing trained models
+- **results/**            # Output results such as generated summaries
+- **scripts/**            # Automation scripts (e.g., data download, model training)
+- **setup/**              # Directory for setup
+- **src/**                # Source code for summarization methods
 - **README.md**           # Project overview and setup guide
 - **environment.yml**    # Python dependencies
 
@@ -93,7 +93,7 @@ This script initializes the project by setting up the conda environment, creatin
    - **TextRank**：使用基于图的 TextRank 进行提取式摘要生成。
 
 3. **基于 Transformer 模型的抽象摘要生成**
-   - **T5（文本到文本转换 Transformer）**：用于生成抽象摘要。
+   - **T5（文本到文本转换 Transformer）**：根据任务使用数据调整预训练的T5-base模型。
 
 4. **评估与比较**
    - 比较传统的提取式方法和基于 transformer 模型的摘要生成方法。
@@ -117,13 +117,13 @@ This script initializes the project by setting up the conda environment, creatin
 项目的文件结构如下：
 
 - **data/**               # 用于存储数据集的目录（数据集不会上传，但可通过脚本下载）
-- **src/**                # 摘要生成方法的源代码
-- **models/**             # 用于存储训练好的模型的目录
-- **setup/**              # 用于设置的目录
-- **scripts/**            # 自动化脚本（如数据下载、模型训练）
-- **results/**            # 输出结果如生成的摘要
-- **gui/**                # GUI 相关代码和资源
 - **docs/**               # 项目文档和笔记
+- **gui/**                # GUI 相关代码和资源
+- **models/**             # 用于存储训练好的模型的目录
+- **results/**            # 输出结果如生成的摘要
+- **scripts/**            # 自动化脚本（如数据下载、模型训练）
+- **setup/**              # 用于设置的目录
+- **src/**                # 摘要生成方法的源代码
 - **README.md**           # 项目概述与设置指南
 - **environment.yml**    # Python 依赖库
 
