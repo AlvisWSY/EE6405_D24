@@ -14,20 +14,20 @@ class SummarizationApp:
         self.history = []
         self.t5_model = T5Model()
 
-        # GUI 布局
+        # GUI Layout
         self.setup_gui()
 
     def setup_gui(self):
         """
-        初始化 GUI 界面。
+        Initialize the GUI interface.
         """
-        # 设置窗口大小和背景色
-        self.root.geometry("900x600")
-        self.root.configure(bg="#ffffff")  # 背景色
+        # Set window size and background color
+        self.root.geometry("1100x600")
+        self.root.configure(bg="#ffffff")  # Background color
 
-        # 配置样式
+        # Configure styles
         style = ttk.Style()
-        style.theme_use('clam')  # 使用现代样式
+        style.theme_use('clam')  # Use modern theme
         style.configure('TFrame', background='#ffffff')
         style.configure('TLabel', background='#ffffff', font=('Helvetica', 14))
         style.configure('TButton', font=('Helvetica', 12), foreground='#ffffff', background='#007ACC')
@@ -38,56 +38,56 @@ class SummarizationApp:
         style.configure('TLabelframe', background='#ffffff', font=('Helvetica', 12, 'bold'))
         style.configure('TLabelframe.Label', background='#ffffff', font=('Helvetica', 12, 'bold'), foreground='#007ACC')
 
-        # 左侧面板
+        # Left panel
         left_frame = ttk.Frame(self.root)
         left_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10, pady=10)
 
-        # 输入区域
-        instruction_label = ttk.Label(left_frame, text="输入文本或上传文件以生成摘要（任选其一）：", anchor="w", justify="left")
+        # Input area
+        instruction_label = ttk.Label(left_frame, text="Enter text or upload a file to generate a summary (choose either):", anchor="w", justify="left")
         instruction_label.pack(fill=tk.X, padx=5, pady=5)
 
-        input_frame = ttk.LabelFrame(left_frame, text="输入区域", padding=(10, 10))
+        input_frame = ttk.LabelFrame(left_frame, text="Input Area", padding=(10, 10))
         input_frame.pack(fill=tk.BOTH, expand=True, pady=5)
         self.input_text = tk.Text(input_frame, height=10, font=("Courier", 12))
         self.input_text.pack(fill=tk.BOTH, expand=True)
 
         upload_frame = ttk.Frame(input_frame)
         upload_frame.pack(fill=tk.X, pady=5)
-        upload_label = ttk.Label(upload_frame, text="或上传文件：")
+        upload_label = ttk.Label(upload_frame, text="Or upload a file:")
         upload_label.pack(side=tk.LEFT, padx=5)
-        upload_button = ttk.Button(upload_frame, text="上传文件", command=self.upload_file)
+        upload_button = ttk.Button(upload_frame, text="Upload File", command=self.upload_file)
         upload_button.pack(side=tk.LEFT, padx=5)
 
-        # 设置区域
-        interaction_frame = ttk.LabelFrame(left_frame, text="设置", padding=(10, 10))
+        # Settings area
+        interaction_frame = ttk.LabelFrame(left_frame, text="Settings", padding=(10, 10))
         interaction_frame.pack(fill=tk.BOTH, expand=True, pady=5)
 
-        method_label = ttk.Label(interaction_frame, text="选择方法：")
+        method_label = ttk.Label(interaction_frame, text="Select Method:")
         method_label.grid(row=0, column=0, padx=5, pady=5, sticky='w')
         self.method_var = tk.StringVar(value="TextRank")
         method_menu = ttk.Combobox(interaction_frame, textvariable=self.method_var, state="readonly")
         method_menu['values'] = ("TextRank", "TF-IDF+LSA", "HITS", "T5")
         method_menu.grid(row=0, column=1, padx=5, pady=5, sticky='w')
 
-        length_label = ttk.Label(interaction_frame, text="摘要长度（句子数）：")
+        length_label = ttk.Label(interaction_frame, text="Summary Length (Number of Sentences):")
         length_label.grid(row=0, column=2, padx=5, pady=5, sticky='w')
         self.length_entry = ttk.Entry(interaction_frame, width=10)
         self.length_entry.grid(row=0, column=3, padx=5, pady=5, sticky='w')
         self.length_entry.insert(0, "3")
 
-        generate_button = ttk.Button(interaction_frame, text="生成摘要", command=self.generate_summary)
+        generate_button = ttk.Button(interaction_frame, text="Generate Summary", command=self.generate_summary)
         generate_button.grid(row=0, column=4, padx=5, pady=5, sticky='w')
 
-        # 输出区域
-        output_frame = ttk.LabelFrame(left_frame, text="输出区域", padding=(10, 10))
+        # Output area
+        output_frame = ttk.LabelFrame(left_frame, text="Output Area", padding=(10, 10))
         output_frame.pack(fill=tk.BOTH, expand=True, pady=5)
         self.output_text = tk.Text(output_frame, height=10, state=tk.DISABLED, font=("Courier", 12))
         self.output_text.pack(fill=tk.BOTH, expand=True)
 
-        # 右侧面板
+        # Right panel
         right_frame = ttk.Frame(self.root)
         right_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=10, pady=10)
-        history_label = ttk.Label(right_frame, text="摘要历史", font=("Helvetica", 14, "bold"))
+        history_label = ttk.Label(right_frame, text="Summary History", font=("Helvetica", 14, "bold"))
         history_label.pack(anchor="n", pady=5)
         self.history_listbox = tk.Listbox(right_frame, font=("Courier", 12))
         self.history_listbox.pack(fill=tk.BOTH, expand=True)
@@ -95,7 +95,7 @@ class SummarizationApp:
 
     def upload_file(self):
         """
-        上传文件并显示到输入区域。
+        Upload a file and display its content in the input area.
         """
         file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt"), ("Doc files", "*.doc")])
         if file_path:
@@ -105,21 +105,21 @@ class SummarizationApp:
                     self.input_text.delete(1.0, tk.END)
                     self.input_text.insert(tk.END, content)
             except Exception as e:
-                messagebox.showerror("错误", f"无法读取文件：{e}")
+                messagebox.showerror("Error", f"Unable to read file: {e}")
 
     def generate_summary(self):
         """
-        调用摘要方法并显示摘要结果。
+        Generate a summary using the selected method and display the result.
         """
         input_text = self.input_text.get(1.0, tk.END).strip()
         method = self.method_var.get()
         length = self.length_entry.get()
 
         if not input_text:
-            messagebox.showwarning("警告", "请输入文本或上传文件！")
+            messagebox.showwarning("Warning", "Please enter text or upload a file!")
             return
         if not length.isdigit() or int(length) <= 0:
-            messagebox.showwarning("警告", "摘要长度必须为正整数！")
+            messagebox.showwarning("Warning", "Summary length must be a positive integer!")
             return
 
         self.output_text.config(state=tk.NORMAL)
@@ -132,11 +132,11 @@ class SummarizationApp:
             self.history.append((method, input_text[:100], summary))
             self.history_listbox.insert(tk.END, f"{method}: {input_text[:50]}...")
         except Exception as e:
-            messagebox.showerror("错误", f"摘要生成失败：{e}")
+            messagebox.showerror("Error", f"Failed to generate summary: {e}")
 
     def perform_summarization(self, text, method, length):
         """
-        根据选择的方法生成摘要。
+        Generate a summary based on the selected method.
         """
         if method == "TextRank":
             return textrank_summary(text, length)
@@ -147,11 +147,11 @@ class SummarizationApp:
         elif method == "T5":
             return self.t5_model.summarize(text, length)
         else:
-            return "未实现的摘要方法"
+            return "Method not implemented"
 
     def display_history(self, event):
         """
-        显示历史摘要结果。
+        Display a summary from the history.
         """
         selection = self.history_listbox.curselection()
         if selection:
