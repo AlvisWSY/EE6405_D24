@@ -54,7 +54,7 @@ The project structure is organized as follows:
 - **setup/**              # Directory for setup
 - **src/**                # Source code for summarization methods
 - **README.md**           # Project overview and setup guide
-- **environment.yml**    # Python dependencies
+- **environment.yml**     # Python dependencies
 
 ## Getting Started
 
