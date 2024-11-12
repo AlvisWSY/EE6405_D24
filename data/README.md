@@ -39,6 +39,8 @@ Both the original and processed datasets contain `test`, `train`, and `validatio
 ## Data Preprocessing
 The data preprocessing script (`data_cleaner`) is located in the project's `script` directory. It performs various data cleaning operations such as removing special characters, placeholders, and HTML tags. The preprocessed data is saved in the `processed` directory with the same structure and format as the original datasets (in `.arrow` format).
 
+Processed dataset contains 2 attributes: text and abstract.
+
 ## Usage Instructions
 Example code for using the dataset in the project:
 ```python
@@ -94,7 +96,7 @@ data/
 原始数据集和预处理数据集均包含 `test`、`train` 和 `validation` 目录及相应的 `.arrow` 文件和 `dataset.json` 文件。
 
 ## 数据预处理
-数据预处理脚本（data_cleaner）在项目目录的 `script` 目录下。分别对数据集进行了处理，例如，去特殊符号，占位符，html标签等操作。然后以原始数据集的相同结构、相同格式（.arrow）保存在 `processed` 目录下。
+数据预处理脚本（data_cleaner）在项目目录的 `script` 目录下。分别对数据集进行了处理，例如，去特殊符号，占位符，html标签等操作。然后以原始数据集的相同结构、相同格式（.arrow）保存在 `processed` 目录下。处理过的数据包含2个属性：text以及abstract。
 
 ## 使用说明
 在项目中使用数据集的示例代码：
