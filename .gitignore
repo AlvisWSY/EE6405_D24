@@ -5,3 +5,5 @@
 /logs/
 /models/t5_finetuned/
 /models/test/
+/gui/model/
+*.DS_Store
