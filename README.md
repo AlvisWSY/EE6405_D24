@@ -45,16 +45,16 @@ Additionally, we built a **Graphical User Interface (GUI)** that allows users to
 
 The project structure is organized as follows:
 
-- **data/**               # Directory for storing datasets (datasets are not uploaded but can be downloaded via scripts)
-- **docs/**               # Documentation and project notes
-- **gui/**                # GUI related code and assets
-- **models/**             # Directory for storing trained models
-- **results/**            # Output results such as generated summaries
-- **scripts/**            # Automation scripts (e.g., data download, model training)
-- **setup/**              # Directory for setup
-- **src/**                # Source code for summarization methods
-- **README.md**           # Project overview and setup guide
-- **environment.yml**     # Python dependencies
+- **`data/`**               Directory for storing datasets (datasets are not uploaded but can be downloaded via scripts)
+- **`docs/`**               Documentation and project notes
+- **`gui/`**                GUI related code and assets
+- **`models/`**             Directory for storing trained models
+- **`results/`**            Output results such as generated summaries
+- **`scripts/`**            Automation scripts (e.g., data download, model training)
+- **`setup/`**              Directory for setup
+- **`src/`**                Source code for summarization methods
+- **`README.md`**           Project overview and setup guide
+- **`environment.yml`**     Python dependencies
 
 ## Getting Started
 
@@ -116,16 +116,16 @@ This script initializes the project by setting up the conda environment, creatin
 
 项目的文件结构如下：
 
-- **data/**               # 用于存储数据集的目录（数据集不会上传，但可通过脚本下载）
-- **docs/**               # 项目文档和笔记
-- **gui/**                # GUI 相关代码和资源
-- **models/**             # 用于存储训练好的模型的目录
-- **results/**            # 输出结果如生成的摘要
-- **scripts/**            # 自动化脚本（如数据下载、模型训练）
-- **setup/**              # 用于设置的目录
-- **src/**                # 摘要生成方法的源代码
-- **README.md**           # 项目概述与设置指南
-- **environment.yml**    # Python 依赖库
+- **`data/`**               用于存储数据集的目录（数据集不会上传，但可通过脚本下载）
+- **`docs/`**               项目文档和笔记
+- **`gui/`**                GUI 相关代码和资源
+- **`models/`**             用于存储训练好的模型的目录
+- **`results/`**            输出结果如生成的摘要
+- **`scripts/`**            自动化脚本（如数据下载、模型训练）
+- **`setup/`**              用于设置的目录
+- **`src/`**                摘要生成方法的源代码
+- **`README.md`**           项目概述与设置指南
+- **`environment.yml`**     Python 依赖库
 
 ## 快速开始
 
