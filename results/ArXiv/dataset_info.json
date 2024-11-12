@@ -1,0 +1,36 @@
+{
+  "citation": "",
+  "description": "",
+  "features": {
+    "abstract": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "hits": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "t5_summary": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "t5_demo": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "lsa": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "TextRank": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "keyword_summary": {
+      "dtype": "string",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": ""
+}
