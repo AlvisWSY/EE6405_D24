@@ -25,7 +25,7 @@ Additionally, we built a **Graphical User Interface (GUI)** that allows users to
    - **T5 (Text-to-Text Transfer Transformer)**: Finetune pre-trained T5-base model for atrical summarization.
 
 4. **Evaluation and Comparison**
-   - Compare both traditional and transformer-based summarization methods.
+   - Evaluate the summarization results based on both traditional and transformer-based methods
    - Compare the scores and performance of CNN/Daily Mail Dataset and ArXiv Dataset.
    - Metrics for evaluation:
      - **BLEU**: Evaluate overlap between generated summaries and reference summaries.
@@ -97,7 +97,7 @@ This script initializes the project by setting up the conda environment, creatin
    - **T5（文本到文本转换 Transformer）**：根据任务使用数据调整预训练的T5-base模型。
 
 4. **评估与比较**
-   - 比较传统的提取式方法和基于 transformer 模型的摘要生成方法。
+   - 评估基于传统提取式方法和基于 transformer 模型生成的摘要结果。
    - 比较 CNN/Daily Mail 数据集和 ArXiv 数据集的得分和效果。
    - 评估指标：
      - **BLEU**：评估生成的摘要与参考摘要之间的重叠。
