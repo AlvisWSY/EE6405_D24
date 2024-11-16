@@ -9,11 +9,11 @@ from scipy.sparse import csr_matrix
 import networkx as nx
 import nltk
 
-# 下载 NLTK 数据
+# Download necessary NLTK data
 nltk.download("punkt")
 nltk.download("stopwords")
 
-# 文本预处理函数
+# Text preprocessing function
 def preprocess_text(text):
     stop_words = set(stopwords.words("english"))
     sentences = sent_tokenize(text)
@@ -24,27 +24,27 @@ def preprocess_text(text):
         preprocessed_sentences.append(" ".join(words))
     return sentences, preprocessed_sentences
 
-# 方法 1: 关键词提取
+# Method 1: Keyword-based summary
 def keyword_summary(text, num_sentences=5):
-    # 1. 预处理文本
+    # 1. Preprocess the text
     original_sentences, preprocessed_sentences = preprocess_text(text)
     if not preprocessed_sentences:
         return "No content to summarize."
 
-    # 2. 计算 TF-IDF 矩阵
+    # 2. Compute the TF-IDF matrix
     vectorizer = TfidfVectorizer()
     tfidf_matrix = vectorizer.fit_transform(preprocessed_sentences)
 
-    # 3. 计算每个句子的权重分数（归一化长度）
+    # 3. Compute the weight score of each sentence (normalized by length)
     scores = [
         (tfidf_matrix[i].sum() / max(1, len(original_sentences[i].split())), original_sentences[i])
         for i in range(len(original_sentences))
     ]
 
-    # 4. 排序句子分数
+    # 4. Sort sentences by score
     ranked_sentences = sorted(scores, reverse=True)
 
-    # 5. 去除重复句子
+    # 5. Remove duplicate sentences
     selected_sentences = []
     for _, sentence in ranked_sentences:
         if len(selected_sentences) >= num_sentences:
@@ -52,12 +52,12 @@ def keyword_summary(text, num_sentences=5):
         if not is_similar(sentence, selected_sentences, threshold=0.5):
             selected_sentences.append(sentence)
 
-    # 6. 返回摘要
+    # 6. Return the summary
     return " ".join(selected_sentences)
 
 def is_similar(sentence, selected_sentences, threshold=0.5):
     """
-    检查句子是否与已选句子重复（使用 Jaccard 相似度）。
+    Check if a sentence is similar to already selected sentences (using Jaccard similarity).
     """
     sentence_set = set(sentence.split())
     for selected in selected_sentences:
@@ -66,7 +66,7 @@ def is_similar(sentence, selected_sentences, threshold=0.5):
             return True
     return False
 
-# 方法 2: HITS
+# Method 2: HITS
 def hits_summary(text, num_sentences=5):
     original_sentences, preprocessed_sentences = preprocess_text(text)
     if len(original_sentences) <= num_sentences:
@@ -75,14 +75,14 @@ def hits_summary(text, num_sentences=5):
         return "No content to summarize."
     vectorizer = TfidfVectorizer()
     tfidf_matrix = vectorizer.fit_transform(preprocessed_sentences)
-    similarity_matrix = cosine_similarity(tfidf_matrix, dense_output=False)  # 稀疏相似性矩阵
-    sparse_matrix = csr_matrix(similarity_matrix)  # 保持稀疏矩阵
+    similarity_matrix = cosine_similarity(tfidf_matrix, dense_output=False)  # Sparse similarity matrix
+    sparse_matrix = csr_matrix(similarity_matrix)  # Keep it sparse
     nx_graph = nx.from_scipy_sparse_array(sparse_matrix)
     hubs, authorities = nx.hits(nx_graph, max_iter=100, tol=1e-4)
     ranked_sentences = sorted(((authorities[i], original_sentences[i]) for i in range(len(original_sentences))), reverse=True)
     return " ".join(s for _, s in ranked_sentences[:num_sentences])
 
-# 方法 3: TF-IDF + LSA
+# Method 3: TF-IDF + LSA
 def lsa_summary(text, num_sentences=5):
     original_sentences, preprocessed_sentences = preprocess_text(text)
     if len(original_sentences) <= num_sentences:
@@ -99,7 +99,7 @@ def lsa_summary(text, num_sentences=5):
     ranked_sentences = sorted(((scores[i], original_sentences[i]) for i in range(len(scores))), reverse=True)
     return " ".join(s for _, s in ranked_sentences[:num_sentences])
 
-# 处理单个数据样本
+# Process a single dataset sample
 def process_sample(sample, method_name):
     text = sample["text"]
     abstract = sample["abstract"]
@@ -117,11 +117,11 @@ def process_sample(sample, method_name):
         print(f"Error processing sample: {e}")
         return {"abstract": abstract, "output": "Error generating summary."}
 
-# 数据集处理函数（替代 lambda）
+# Dataset processing function (alternative to lambda)
 def process_dataset_sample(sample, method_name):
     return process_sample(sample, method_name)
 
-# 主函数
+# Main function
 def process_datasets(path, outpath):
     methods = ["keyword_summary", "hits", "lsa"]
     for dataset_name in os.listdir(path):
@@ -130,30 +130,30 @@ def process_datasets(path, outpath):
             continue
         print(f"Processing dataset: {dataset_name}")
         
-        # 加载 test 数据集
+        # Load test dataset
         test_dataset = load_from_disk(dataset_path)
 
         for method_name in methods:
             print(f"Using method: {method_name}")
-            # 使用 num_proc 并行处理数据集
+            # Use num_proc to process the dataset in parallel
             processed_data = test_dataset.map(
                 process_dataset_sample,
                 fn_kwargs={"method_name": method_name},
-                num_proc=4,  # 启用多进程
+                num_proc=4,  # Enable multiprocessing
             )
             
-            # 保存结果
+            # Save results
             output_dir = os.path.join(outpath, method_name, dataset_name)
             os.makedirs(output_dir, exist_ok=True)
             processed_data = processed_data.remove_columns([col for col in processed_data.column_names if col not in ["abstract", "output"]])
             processed_data.save_to_disk(output_dir)
 
-# 获取当前脚本所在目录
+# Get the current script's directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
-# 配置相对路径
-path = os.path.join(current_dir, "../data/processed")  # 输入路径
-outpath = os.path.join(current_dir, "../output")  # 输出路径
+# Configure paths
+path = os.path.join(current_dir, "../data/processed")  # Input path
+outpath = os.path.join(current_dir, "../output")  # Output path
 
-# 运行
+# Run
 process_datasets(path, outpath)

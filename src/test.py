@@ -5,51 +5,51 @@ from transformers.data.data_collator import DataCollatorForSeq2Seq
 import multiprocessing
 import torch
 
-# Step 1: 动态定义目录
+# Step 1: Dynamically define directories
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
-# 使用相对路径拼接目录
+# Use relative paths to construct directories
 data_dir = os.path.join(current_dir, "../data", "processed")
 output_model_dir = os.path.join(current_dir, "../models", "t5_finetuned")
 output_dir = os.path.join(current_dir, "../output", "t5_summary")
-cache_dir = os.path.join(current_dir, "../tmp")  # 缓存目录
+cache_dir = os.path.join(current_dir, "../tmp")  # Cache directory
 
-# 设置缓存目录
+# Set cache directory
 os.environ["HF_DATASETS_CACHE"] = cache_dir
 
-# 确保必要的目录存在
+# Ensure necessary directories exist
 os.makedirs(output_model_dir, exist_ok=True)
 os.makedirs(output_dir, exist_ok=True)
 os.makedirs(cache_dir, exist_ok=True)
 
-# 打印目录以确认
+# Print directory paths for verification
 print(f"Data directory: {data_dir}")
 print(f"Model output directory: {output_model_dir}")
 print(f"Test results output directory: {output_dir}")
 print(f"Cache directory: {cache_dir}")
 
-# **指定可用的 GPU**
-# 如果您可以使用 GPU 0
+# Specify the GPU to use
+# If you can use GPU 0
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-# Step 2: 加载数据
+# Step 2: Load datasets
 def load_and_print_dataset(path, split_name):
     dataset = load_from_disk(path)
     print(f"Loaded {split_name}: {len(dataset)} samples")
     return dataset
 
-# ArXiv 数据
+# Load ArXiv dataset
 arxiv_train = load_and_print_dataset(os.path.join(data_dir, "ArXiv/train"), "ArXiv train")
 arxiv_validation = load_and_print_dataset(os.path.join(data_dir, "ArXiv/validation"), "ArXiv validation")
 arxiv_test = load_and_print_dataset(os.path.join(data_dir, "ArXiv/test"), "ArXiv test")
 
-# CNN/DailyMail 数据
+# Load CNN/DailyMail dataset
 cnn_train = load_and_print_dataset(os.path.join(data_dir, "cnn_dailymail/train"), "CNN train")
 cnn_validation = load_and_print_dataset(os.path.join(data_dir, "cnn_dailymail/validation"), "CNN validation")
 cnn_test = load_and_print_dataset(os.path.join(data_dir, "cnn_dailymail/test"), "CNN test")
 
-# **限制数据集大小**
-small_size = 100  # 您可以根据需要调整这个数字
+# **Limit dataset size for testing**
+small_size = 100  # Adjust this value as needed
 
 arxiv_train = arxiv_train.select(range(min(small_size, len(arxiv_train))))
 arxiv_validation = arxiv_validation.select(range(min(small_size, len(arxiv_validation))))
@@ -59,22 +59,22 @@ cnn_train = cnn_train.select(range(min(small_size, len(cnn_train))))
 cnn_validation = cnn_validation.select(range(min(small_size, len(cnn_validation))))
 cnn_test = cnn_test.select(range(min(small_size, len(cnn_test))))
 
-# 合并训练集和验证集
+# Combine training and validation datasets
 train_dataset = concatenate_datasets([arxiv_train, cnn_train])
 validation_dataset = concatenate_datasets([arxiv_validation, cnn_validation])
 print(f"Combined train dataset size: {len(train_dataset)} samples")
 print(f"Combined validation dataset size: {len(validation_dataset)} samples")
 
-# Step 3: 加载预训练模型和 tokenizer
-model_name = "t5-small"  # 使用较小的模型以加快测试速度
+# Step 3: Load pre-trained model and tokenizer
+model_name = "t5-small"  # Use a smaller model for faster testing
 tokenizer = T5Tokenizer.from_pretrained(model_name)
 model = T5ForConditionalGeneration.from_pretrained(model_name)
 
-# Step 4: 数据预处理
+# Step 4: Preprocess data
 max_input_length = 512
 max_target_length = 128
 
-# 定义预处理函数
+# Define preprocessing function
 def preprocess_function(examples):
     try:
         inputs = ["summarize: " + text for text in examples["text"]]
@@ -89,7 +89,7 @@ def preprocess_function(examples):
         print(f"Error during preprocessing: {e}")
         raise e
 
-# 优化数据预处理
+# Optimize data preprocessing
 def preprocess_dataset(dataset, num_proc, batch_size):
     max_threads = multiprocessing.cpu_count()
     num_proc = min(num_proc, max_threads)
@@ -107,35 +107,35 @@ def preprocess_dataset(dataset, num_proc, batch_size):
         remove_columns=["text", "abstract"]
     )
 
-# 调整线程数和批量大小
-num_proc = 1  # 减少线程数
-batch_size = 16  # 减少批量大小
+# Adjust the number of threads and batch size
+num_proc = 1  # Reduce the number of threads
+batch_size = 16  # Reduce the batch size
 
 train_dataset = preprocess_dataset(train_dataset, num_proc=num_proc, batch_size=batch_size)
 validation_dataset = preprocess_dataset(validation_dataset, num_proc=num_proc, batch_size=batch_size)
 
-# Step 5: 定义训练参数
+# Step 5: Define training arguments
 training_args = Seq2SeqTrainingArguments(
     output_dir=output_model_dir,
     evaluation_strategy="epoch",
     save_strategy="epoch",
     learning_rate=5e-5,
-    per_device_train_batch_size=4,  # 根据显存情况调整
+    per_device_train_batch_size=4,  # Adjust based on GPU memory
     per_device_eval_batch_size=4,
-    num_train_epochs=1,  # 减少训练轮数
+    num_train_epochs=1,  # Reduce the number of epochs
     weight_decay=0.01,
     save_total_limit=2,
     logging_dir="./logs",
     logging_steps=10,
     predict_with_generate=True,
     load_best_model_at_end=True,
-    fp16=False,  # 禁用混合精度训练
+    fp16=False,  # Disable mixed precision training
 )
 
-# Step 6: 定义数据收集器
+# Step 6: Define data collator
 data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
 
-# Step 7: 微调模型
+# Step 7: Fine-tune the model
 trainer = Trainer(
     model=model,
     args=training_args,
@@ -149,21 +149,21 @@ print("Starting training...")
 trainer.train()
 print("Training completed.")
 
-# 保存模型
+# Save the fine-tuned model
 model.save_pretrained(output_model_dir)
 tokenizer.save_pretrained(output_model_dir)
 print(f"Model saved to {output_model_dir}")
 
-# Step 8: 测试集推理并保存输出
+# Step 8: Perform inference on the test dataset and save the output
 def generate_predictions(test_dataset, dataset_name):
     processed_test = test_dataset.map(preprocess_function, batched=True, remove_columns=["text", "abstract"])
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
 
-    # 调整批量大小
-    batch_size = 16  # 根据显存情况调整
+    # Adjust batch size
+    batch_size = 16  # Adjust based on GPU memory
 
-    # 创建数据加载器
+    # Create data loader
     from torch.utils.data import DataLoader
 
     def collate_fn(batch):
@@ -192,11 +192,11 @@ def generate_predictions(test_dataset, dataset_name):
         "output": predictions,
     })
 
-    save_path = os.path.join(output_dir, 'test',dataset_name)
+    save_path = os.path.join(output_dir, 'test', dataset_name)
     os.makedirs(save_path, exist_ok=True)
     results.save_to_disk(save_path)
     print(f"Test results saved to {save_path}")
 
-# 推理 ArXiv 和 CNN/DailyMail 测试集
+# Perform inference on ArXiv and CNN/DailyMail test datasets
 generate_predictions(arxiv_test, "ArXiv")
 generate_predictions(cnn_test, "cnn_dailymail")
