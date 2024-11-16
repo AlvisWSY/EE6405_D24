@@ -26,10 +26,11 @@ Additionally, we built a **Graphical User Interface (GUI)** that allows users to
 
 4. **Evaluation and Comparison**
    - Compare both traditional and transformer-based summarization methods.
+   - Compare the scores and performance of CNN/Daily Mail Dataset and ArXiv Dataset.
    - Metrics for evaluation:
      - **BLEU**: Evaluate overlap between generated summaries and reference summaries.
      - **ROUGE**: Measure recall-oriented evaluation of generated summaries.
-     - **Metor**: Evaluate.
+     - **METEOR**: Evaluate the sequence of words in the output sentence.
 
 5. **GUI Development**
    - Develop a user-friendly GUI to allow users to:
@@ -97,10 +98,11 @@ This script initializes the project by setting up the conda environment, creatin
 
 4. **评估与比较**
    - 比较传统的提取式方法和基于 transformer 模型的摘要生成方法。
+   - 比较 CNN/Daily Mail 数据集和 ArXiv 数据集的得分和效果。
    - 评估指标：
      - **BLEU**：评估生成的摘要与参考摘要之间的重叠。
      - **ROUGE**：衡量生成摘要的回忆率。
-     - **Metor**：评估。
+     - **METEOR**：评估输出句子中的单词序列。
 
 5. **GUI 开发**
    - 开发用户友好的 GUI，允许用户：
